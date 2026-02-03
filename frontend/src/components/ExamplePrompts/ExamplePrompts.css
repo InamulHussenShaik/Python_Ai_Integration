@@ -1,0 +1,132 @@
+/**
+ * ============================================
+ * Example Prompts Component Styles
+ * ============================================
+ */
+
+.example-prompts {
+    margin-top: auto;
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+}
+
+.example-prompts__header {
+    margin-bottom: var(--spacing-md);
+}
+
+.example-prompts__title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.example-prompts__icon {
+    font-size: 1.1rem;
+}
+
+/* Examples List */
+.example-prompts__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.example-prompts__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-primary);
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.example-prompts__item:hover {
+    background: rgba(108, 92, 231, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-text-primary);
+    transform: translateX(4px);
+}
+
+.example-prompts__text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+}
+
+.example-prompts__arrow {
+    opacity: 0;
+    color: var(--color-primary);
+    transition: all var(--transition-fast);
+    transform: translateX(-10px);
+}
+
+.example-prompts__item:hover .example-prompts__arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Toggle Button */
+.example-prompts__toggle {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-family: var(--font-primary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    transition: all var(--transition-fast);
+}
+
+.example-prompts__toggle:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.toggle-icon {
+    transition: transform var(--transition-fast);
+}
+
+.example-prompts__toggle:hover .toggle-icon {
+    animation: bounce 0.5s ease infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(3px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .example-prompts__item {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.8rem;
+    }
+}

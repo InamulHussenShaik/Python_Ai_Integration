@@ -1,0 +1,222 @@
+/**
+ * ============================================
+ * App Component Styles
+ * ============================================
+ * Main layout and panel styling
+ */
+
+/* App Container */
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Effects */
+.app__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.app__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    animation: glow-pulse 8s ease-in-out infinite;
+}
+
+.app__glow--1 {
+    width: 600px;
+    height: 600px;
+    background: var(--color-primary);
+    top: -200px;
+    left: -200px;
+}
+
+.app__glow--2 {
+    width: 500px;
+    height: 500px;
+    background: var(--color-secondary);
+    bottom: -150px;
+    right: -150px;
+    animation-delay: 4s;
+}
+
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
+
+/* Main Content */
+.app__main {
+    flex: 1;
+    padding: var(--spacing-lg);
+    padding-top: calc(80px + var(--spacing-lg));
+}
+
+.app__container {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--spacing-lg);
+    height: calc(100vh - 140px);
+}
+
+/* Panels */
+.app__panel {
+    background: var(--gradient-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.app__panel--left {
+    padding: var(--spacing-xl);
+}
+
+.app__panel--right {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Panel Header */
+.panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.panel__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.panel__icon {
+    font-size: 1.5rem;
+}
+
+.panel__subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-xs);
+    width: 100%;
+}
+
+.panel__badge {
+    background: var(--gradient-primary);
+    color: var(--color-text-primary);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-xl);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Panel Sections (Right Panel) */
+.panel__section {
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.panel__section:last-child {
+    border-bottom: none;
+}
+
+.panel__section--table {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.panel__section--sql {
+    flex: 0 0 auto;
+    max-height: 250px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .app__container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .app__panel--left {
+        order: 1;
+    }
+
+    .app__panel--right {
+        order: 2;
+        min-height: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .app__main {
+        padding: var(--spacing-md);
+        padding-top: calc(70px + var(--spacing-md));
+    }
+
+    .app__panel {
+        padding: var(--spacing-lg);
+    }
+
+    .panel__section {
+        padding: var(--spacing-lg);
+    }
+
+    .panel__title {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .app__main {
+        padding: var(--spacing-sm);
+        padding-top: calc(70px + var(--spacing-sm));
+    }
+
+    .app__container {
+        gap: var(--spacing-md);
+    }
+
+    .app__panel {
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+    }
+
+    .panel__section {
+        padding: var(--spacing-md);
+    }
+}

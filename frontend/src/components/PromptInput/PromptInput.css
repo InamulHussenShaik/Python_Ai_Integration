@@ -1,0 +1,182 @@
+/**
+ * ============================================
+ * Prompt Input Component Styles
+ * ============================================
+ */
+
+.prompt-input {
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Textarea Wrapper */
+.prompt-input__wrapper {
+    position: relative;
+    margin-bottom: var(--spacing-md);
+}
+
+.prompt-input__textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: var(--spacing-lg);
+    padding-bottom: var(--spacing-2xl);
+    background: var(--color-bg-secondary);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: all var(--transition-normal);
+}
+
+.prompt-input__textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+}
+
+.prompt-input__textarea:hover:not(:disabled) {
+    border-color: var(--color-border-hover);
+}
+
+.prompt-input__textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-glow);
+    outline: none;
+}
+
+.prompt-input__textarea:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Character Count */
+.prompt-input__count {
+    position: absolute;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* Action Buttons */
+.prompt-input__actions {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.prompt-input__btn {
+    flex: 1;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    transition: all var(--transition-normal);
+}
+
+.prompt-input__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Clear Button */
+.prompt-input__btn--clear {
+    flex: 0 0 auto;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+}
+
+.prompt-input__btn--clear:hover:not(:disabled) {
+    background: rgba(255, 118, 117, 0.1);
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+/* Submit Button */
+.prompt-input__btn--submit {
+    background: var(--gradient-primary);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+
+.prompt-input__btn--submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 30px var(--color-primary-glow);
+}
+
+.prompt-input__btn--submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Button Icons */
+.btn-icon {
+    font-size: 0.9rem;
+}
+
+.btn-text {
+    white-space: nowrap;
+}
+
+/* Loading Spinner */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Keyboard Shortcuts Hint */
+.prompt-input__hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}
+
+.prompt-input__hint kbd {
+    background: var(--color-bg-tertiary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .prompt-input__btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+    }
+
+    .btn-text {
+        display: none;
+    }
+
+    .prompt-input__btn--submit .btn-text {
+        display: inline;
+    }
+
+    .prompt-input__hint {
+        display: none;
+    }
+}

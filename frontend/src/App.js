@@ -1,0 +1,256 @@
+/**
+ * ============================================
+ * Main App Component
+ * ============================================
+ * Natural Language to SQL Query Generator
+ * 
+ * Layout: Split panel design
+ * - Left: Query input and examples
+ * - Right: Results (data table + SQL query)
+ */
+
+import React, { useState, useEffect } from 'react';
+import './App.css';
+
+// Import components
+import Header from './components/Header/Header';
+import PromptInput from './components/PromptInput/PromptInput';
+import ExamplePrompts from './components/ExamplePrompts/ExamplePrompts';
+import DataTable from './components/DataTable/DataTable';
+import SqlDisplay from './components/SqlDisplay/SqlDisplay';
+import StatusBar from './components/StatusBar/StatusBar';
+
+// Import API service
+import { processPrompt, fetchExamples, checkHealth } from './api/api';
+
+/**
+ * Main App Component
+ * Manages application state and layout
+ */
+function App() {
+    // ============================================
+    // State Management
+    // ============================================
+
+    // Query state
+    const [prompt, setPrompt] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Results state
+    const [results, setResults] = useState(null);
+    const [sqlQuery, setSqlQuery] = useState('');
+    const [error, setError] = useState(null);
+    const [rowCount, setRowCount] = useState(0);
+
+    // Example prompts
+    const [examples, setExamples] = useState([]);
+
+    // API health status
+    const [apiStatus, setApiStatus] = useState({
+        connected: false,
+        database: false,
+        ai: false,
+        message: 'Checking connection...'
+    });
+
+    // ============================================
+    // Effects
+    // ============================================
+
+    /**
+     * Initial setup - load examples and check API health
+     */
+    useEffect(() => {
+        loadExamples();
+        checkApiHealth();
+    }, []);
+
+    /**
+     * Load example prompts from the API
+     */
+    const loadExamples = async () => {
+        try {
+            const data = await fetchExamples();
+            if (data.success) {
+                setExamples(data.examples);
+            }
+        } catch (err) {
+            console.error('Failed to load examples:', err);
+            // Set default examples if API fails
+            setExamples([
+                { prompt: 'Show all employees', description: 'List all employee records' },
+                { prompt: 'Find employees with salary greater than 70000', description: 'Filter by salary' },
+                { prompt: 'List employees in the Engineering department', description: 'Filter by department' }
+            ]);
+        }
+    };
+
+    /**
+     * Check API health status
+     */
+    const checkApiHealth = async () => {
+        try {
+            const health = await checkHealth();
+            setApiStatus({
+                connected: true,
+                database: health.database?.connected || false,
+                ai: health.ai_service?.configured || false,
+                message: health.status === 'healthy'
+                    ? 'Connected to API'
+                    : 'API connected but some services unavailable'
+            });
+        } catch (err) {
+            setApiStatus({
+                connected: false,
+                database: false,
+                ai: false,
+                message: 'Cannot connect to API. Please start the backend server.'
+            });
+        }
+    };
+
+    // ============================================
+    // Event Handlers
+    // ============================================
+
+    /**
+     * Handle prompt submission
+     */
+    const handleSubmit = async () => {
+        if (!prompt.trim()) {
+            setError('Please enter a query');
+            return;
+        }
+
+        setIsLoading(true);
+        setError(null);
+        setResults(null);
+        setSqlQuery('');
+        setRowCount(0);
+
+        try {
+            const response = await processPrompt(prompt);
+
+            if (response.success) {
+                setResults(response.data);
+                setSqlQuery(response.sql);
+                setRowCount(response.row_count);
+                setError(null);
+            } else {
+                setError(response.error || 'Failed to process query');
+                setSqlQuery(response.sql || '');
+            }
+        } catch (err) {
+            setError(err.message || 'An error occurred while processing your request');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    /**
+     * Handle example prompt click
+     */
+    const handleExampleClick = (examplePrompt) => {
+        setPrompt(examplePrompt);
+        setError(null);
+    };
+
+    /**
+     * Handle clear/reset
+     */
+    const handleClear = () => {
+        setPrompt('');
+        setResults(null);
+        setSqlQuery('');
+        setError(null);
+        setRowCount(0);
+    };
+
+    // ============================================
+    // Render
+    // ============================================
+
+    return (
+        <div className="app">
+            {/* Background Effects */}
+            <div className="app__background">
+                <div className="app__glow app__glow--1"></div>
+                <div className="app__glow app__glow--2"></div>
+            </div>
+
+            {/* Header */}
+            <Header />
+
+            {/* Main Content */}
+            <main className="app__main">
+                <div className="app__container">
+                    {/* Left Panel - Input */}
+                    <section className="app__panel app__panel--left">
+                        <div className="panel__header">
+                            <h2 className="panel__title">
+                                <span className="panel__icon">💬</span>
+                                Query Input
+                            </h2>
+                            <p className="panel__subtitle">
+                                Enter your question in plain English
+                            </p>
+                        </div>
+
+                        <PromptInput
+                            value={prompt}
+                            onChange={setPrompt}
+                            onSubmit={handleSubmit}
+                            onClear={handleClear}
+                            isLoading={isLoading}
+                            disabled={!apiStatus.connected}
+                        />
+
+                        <ExamplePrompts
+                            examples={examples}
+                            onExampleClick={handleExampleClick}
+                        />
+                    </section>
+
+                    {/* Right Panel - Results */}
+                    <section className="app__panel app__panel--right">
+                        {/* Data Table Section */}
+                        <div className="panel__section panel__section--table">
+                            <div className="panel__header">
+                                <h2 className="panel__title">
+                                    <span className="panel__icon">📊</span>
+                                    Query Results
+                                </h2>
+                                {rowCount > 0 && (
+                                    <span className="panel__badge">{rowCount} rows</span>
+                                )}
+                            </div>
+
+                            <DataTable
+                                data={results}
+                                isLoading={isLoading}
+                                error={error}
+                            />
+                        </div>
+
+                        {/* SQL Display Section */}
+                        <div className="panel__section panel__section--sql">
+                            <div className="panel__header">
+                                <h2 className="panel__title">
+                                    <span className="panel__icon">🔧</span>
+                                    Generated SQL
+                                </h2>
+                            </div>
+
+                            <SqlDisplay sql={sqlQuery} />
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            {/* Status Bar */}
+            <StatusBar status={apiStatus} />
+        </div>
+    );
+}
+
+export default App;

@@ -1,0 +1,156 @@
+/**
+ * ============================================
+ * Status Bar Component Styles
+ * ============================================
+ */
+
+.status-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(15, 15, 35, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.status-bar__container {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+}
+
+/* Status Item */
+.status-bar__item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Indicator Dot */
+.status-bar__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-bar__indicator--success {
+    background: var(--color-success);
+    box-shadow: 0 0 8px var(--color-success);
+}
+
+.status-bar__indicator--warning {
+    background: var(--color-warning);
+    box-shadow: 0 0 8px var(--color-warning);
+    animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+.status-bar__indicator--error {
+    background: var(--color-error);
+    box-shadow: 0 0 8px var(--color-error);
+    animation: pulse-error 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes pulse-warning {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes pulse-error {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.2);
+    }
+}
+
+/* Label */
+.status-bar__label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+/* Spacer */
+.status-bar__spacer {
+    flex: 1;
+}
+
+/* Brand */
+.status-bar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.status-bar__version {
+    padding: 2px 6px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .status-bar__container {
+        gap: var(--spacing-md);
+    }
+
+    .status-bar__label {
+        display: none;
+    }
+
+    .status-bar__item {
+        position: relative;
+    }
+
+    .status-bar__item::after {
+        content: attr(title);
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .status-bar {
+        padding: var(--spacing-xs) var(--spacing-md);
+    }
+
+    .status-bar__brand {
+        display: none;
+    }
+}

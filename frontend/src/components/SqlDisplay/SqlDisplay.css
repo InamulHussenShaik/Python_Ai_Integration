@@ -1,0 +1,112 @@
+/**
+ * ============================================
+ * SQL Display Component Styles
+ * ============================================
+ */
+
+.sql-display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+}
+
+.sql-display--empty {
+    min-height: 100px;
+}
+
+/* Code Block */
+.sql-display__code-wrapper {
+    flex: 1;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: auto;
+}
+
+.sql-display__code {
+    margin: 0;
+    padding: var(--spacing-lg);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.8;
+    color: var(--color-secondary);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.sql-display__code code {
+    color: inherit;
+}
+
+/* Placeholder */
+.sql-display__placeholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xl);
+    background: var(--color-bg-secondary);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+}
+
+.sql-display__placeholder-icon {
+    font-size: 1.5rem;
+    opacity: 0.6;
+}
+
+/* Actions */
+.sql-display__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-md);
+}
+
+.sql-display__btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-primary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.sql-display__btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.sql-display__btn--copied {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: white;
+}
+
+.sql-display__btn .btn-icon {
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .sql-display__code {
+        padding: var(--spacing-md);
+        font-size: 0.8rem;
+    }
+
+    .sql-display__placeholder {
+        padding: var(--spacing-lg);
+        flex-direction: column;
+        text-align: center;
+    }
+}
