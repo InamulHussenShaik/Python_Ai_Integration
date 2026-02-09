@@ -2,38 +2,24 @@
  * ============================================
  * SQL Display Component
  * ============================================
- * Read-only display of generated SQL query
+ * Simple display for generated SQL
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import './SqlDisplay.css';
 
 /**
- * SqlDisplay component for showing generated SQL
+ * SqlDisplay component for showing and editing generated SQL
  * 
  * @param {Object} props
  * @param {string} props.sql - The SQL query to display
+ * @param {boolean} props.isEditing - Whether in edit mode
+ * @param {string} props.editedSql - The edited SQL value
+ * @param {function} props.onEditedSqlChange - Callback when SQL is edited
  */
-function SqlDisplay({ sql }) {
-    const [copied, setCopied] = useState(false);
-
-    /**
-     * Copy SQL to clipboard
-     */
-    const handleCopy = async () => {
-        if (!sql) return;
-
-        try {
-            await navigator.clipboard.writeText(sql);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Failed to copy:', err);
-        }
-    };
-
+function SqlDisplay({ sql, isEditing, editedSql, onEditedSqlChange }) {
     // Empty state
-    if (!sql) {
+    if (!sql && !isEditing) {
         return (
             <div className="sql-display sql-display--empty">
                 <div className="sql-display__placeholder">
@@ -46,35 +32,36 @@ function SqlDisplay({ sql }) {
         );
     }
 
+    const displaySql = isEditing ? editedSql : sql;
+    const isModified = editedSql !== sql;
+
     return (
         <div className="sql-display">
-            {/* SQL Code Block */}
-            <div className="sql-display__code-wrapper">
-                <pre className="sql-display__code">
-                    <code>{formatSql(sql)}</code>
-                </pre>
-            </div>
-
-            {/* Actions */}
-            <div className="sql-display__actions">
-                <button
-                    className={`sql-display__btn ${copied ? 'sql-display__btn--copied' : ''}`}
-                    onClick={handleCopy}
-                    type="button"
-                    aria-label="Copy SQL to clipboard"
-                >
-                    {copied ? (
-                        <>
-                            <span className="btn-icon">✓</span>
-                            <span>Copied!</span>
-                        </>
-                    ) : (
-                        <>
-                            <span className="btn-icon">📋</span>
-                            <span>Copy SQL</span>
-                        </>
+            {/* Header with mode indicator */}
+            {isEditing && (
+                <div className="sql-display__header">
+                    <span className="sql-display__mode-badge">✏️ Editing Mode</span>
+                    {isModified && (
+                        <span className="sql-display__modified-badge">Modified</span>
                     )}
-                </button>
+                </div>
+            )}
+
+            {/* SQL Code Block or Editor */}
+            <div className="sql-display__code-wrapper">
+                {isEditing ? (
+                    <textarea
+                        className="sql-display__editor"
+                        value={editedSql}
+                        onChange={(e) => onEditedSqlChange(e.target.value)}
+                        placeholder="Enter your SQL query here..."
+                        spellCheck={false}
+                    />
+                ) : (
+                    <pre className="sql-display__code">
+                        <code>{formatSql(displaySql)}</code>
+                    </pre>
+                )}
             </div>
         </div>
     );
@@ -82,22 +69,20 @@ function SqlDisplay({ sql }) {
 
 /**
  * Format SQL for better readability
- * Adds syntax highlighting-like formatting
  */
 function formatSql(sql) {
     if (!sql) return '';
 
-    // Basic formatting - uppercase keywords
     const keywords = [
         'SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER',
         'ON', 'AS', 'ORDER', 'BY', 'GROUP', 'HAVING', 'LIMIT', 'OFFSET', 'ASC', 'DESC',
         'COUNT', 'SUM', 'AVG', 'MAX', 'MIN', 'DISTINCT', 'IN', 'NOT', 'NULL', 'IS', 'LIKE',
-        'BETWEEN', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'UNION', 'ALL', 'EXISTS'
+        'BETWEEN', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'UNION', 'ALL', 'EXISTS',
+        'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE'
     ];
 
     let formatted = sql;
 
-    // This is a simple formatter - just ensure keywords are uppercase
     keywords.forEach(keyword => {
         const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
         formatted = formatted.replace(regex, keyword);

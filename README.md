@@ -29,10 +29,13 @@ Python_Ai_Integration/
 ## 🚀 Features
 
 - **Natural Language Processing**: Convert English prompts to SQL queries
+- **Complex Multi-Table Queries**: Support for JOINs across 2, 3, or more tables with aggregations
 - **AI-Powered**: Uses OpenAI GPT or Google Gemini for intelligent query generation
-- **Security First**: Only SELECT queries allowed - no data modification
+- **Manual SQL Editing**: Edit and execute queries directly, including INSERT, UPDATE, DELETE
+- **Security First**: Dangerous operations (DROP, TRUNCATE, etc.) are blocked
 - **Real-time Results**: Execute queries and display results instantly
-- **Clean UI**: Modern React interface with split-panel design
+- **Clean UI**: Modern React interface with split-panel design and editing mode
+- **Transaction Support**: Data modifications use transactions with automatic rollback on errors
 
 ## 📋 Prerequisites
 
@@ -146,6 +149,28 @@ Converts natural language to SQL and executes the query.
 }
 ```
 
+### POST `/api/execute-manual`
+
+Execute manually edited SQL queries (supports INSERT, UPDATE, DELETE).
+
+**Request Body**:
+```json
+{
+  "sql": "INSERT INTO employees (name, age, department, salary) VALUES ('Alice', 28, 'Sales', 65000);"
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "sql": "INSERT INTO employees (name, age, department, salary) VALUES ('Alice', 28, 'Sales', 65000);",
+  "data": [],
+  "affected_rows": 1,
+  "message": "Successfully inserted 1 row(s)."
+}
+```
+
 ### GET `/api/health`
 
 Health check endpoint.
@@ -160,10 +185,12 @@ Health check endpoint.
 
 ## 🔒 Security Features
 
-1. **SQL Injection Prevention**: Only SELECT queries are executed
-2. **Query Validation**: Backend validates all generated SQL before execution
-3. **Read-Only Operations**: DELETE, UPDATE, INSERT, DROP are blocked
-4. **Environment Variables**: Sensitive data stored in `.env` files
+1. **Dangerous Operation Blocking**: DROP, TRUNCATE, CREATE, ALTER, GRANT, REVOKE are blocked
+2. **AI-Generated Query Validation**: AI-generated queries limited to SELECT only
+3. **Manual Edit Safety**: Manual edits support SELECT, INSERT, UPDATE, DELETE only
+4. **SQL Injection Prevention**: Multiple statements and comment injection blocked
+5. **Transaction Support**: Data modifications use transactions with automatic rollback
+6. **Environment Variables**: Sensitive data stored in `.env` files
 
 ## 📊 Database Schema
 
@@ -176,11 +203,25 @@ Health check endpoint.
 
 ### Sample Queries
 
+**Basic Queries:**
 - "Show all employees"
 - "Find employees with salary greater than 60000"
 - "List employees in the Engineering department"
-- "Get employees working on the AI Platform project"
 - "Show employees older than 30 sorted by salary"
+
+**Multi-Table JOIN Queries:**
+- "Show employees with their department names"
+- "List employees and the projects they work on"
+- "Get employees working on the AI Platform project"
+- "Show all departments with their employee count"
+- "Find employees in Engineering working on active projects"
+
+**Complex Queries:**
+- "Count how many employees are in each department"
+- "Show total salary by department"
+- "List employees, departments, and all their projects"
+- "Find departments with more than 5 employees"
+- "Show employees with salary above department average"
 
 ## 🛠️ Tech Stack
 
@@ -195,6 +236,28 @@ Health check endpoint.
 
 MIT License - feel free to use this project for learning and development.
 
-## 👤 Author
+## � Documentation
+
+- **[FEATURES.md](FEATURES.md)** - Detailed guide on complex queries and manual SQL editing
+- **[QUICK_START.md](QUICK_START.md)** - Quick reference for common tasks and workflows
+
+## 💡 New Features
+
+### Complex Multi-Table Queries
+Ask questions that span multiple tables! Examples:
+- "Show employees with their department names"
+- "List employees, departments, and projects they work on"
+- "Count employees in each department"
+
+### Manual SQL Editing
+Edit and execute queries directly:
+1. Generate a query with natural language
+2. Click "Edit SQL" to modify the query
+3. Change to INSERT, UPDATE, or DELETE as needed
+4. Execute directly from the interface
+
+See [FEATURES.md](FEATURES.md) for complete documentation.
+
+## �👤 Author
 
 Built with ❤️ for interview preparation and learning purposes.

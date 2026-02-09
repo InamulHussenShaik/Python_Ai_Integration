@@ -2,6 +2,7 @@
  * ============================================
  * SQL Display Component Styles
  * ============================================
+ * Clean White Theme with Editing Support
  */
 
 .sql-display {
@@ -15,13 +16,45 @@
     min-height: 100px;
 }
 
+/* Header */
+.sql-display__header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--radius-sm);
+}
+
+.sql-display__mode-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sql-display__modified-badge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    color: white;
+    font-weight: 500;
+}
+
 /* Code Block */
 .sql-display__code-wrapper {
     flex: 1;
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border);
+    min-height: 180px;
+    max-height: 180px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-dark);
     border-radius: var(--radius-md);
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .sql-display__code {
@@ -30,13 +63,38 @@
     font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.8;
-    color: var(--color-secondary);
+    color: var(--color-text-primary);
     white-space: pre-wrap;
     word-break: break-word;
+    flex: 1;
 }
 
 .sql-display__code code {
     color: inherit;
+}
+
+/* Editor */
+.sql-display__editor {
+    width: 100%;
+    flex: 1;
+    min-height: 180px;
+    max-height: 180px;
+    padding: var(--spacing-lg);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.8;
+    color: var(--color-text-primary);
+    background: #f8f9fa;
+    border: none;
+    outline: none;
+    resize: none;
+    border-radius: var(--radius-md);
+    box-sizing: border-box;
+}
+
+.sql-display__editor:focus {
+    background: white;
+    box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 /* Placeholder */
@@ -48,7 +106,7 @@
     gap: var(--spacing-md);
     padding: var(--spacing-xl);
     background: var(--color-bg-secondary);
-    border: 1px dashed var(--color-border);
+    border: 1px dashed var(--color-border-dark);
     border-radius: var(--radius-md);
     color: var(--color-text-muted);
     font-size: 0.875rem;
@@ -56,45 +114,7 @@
 
 .sql-display__placeholder-icon {
     font-size: 1.5rem;
-    opacity: 0.6;
-}
-
-/* Actions */
-.sql-display__actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: var(--spacing-md);
-}
-
-.sql-display__btn {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    color: var(--color-text-secondary);
-    font-family: var(--font-primary);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.sql-display__btn:hover {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
-}
-
-.sql-display__btn--copied {
-    background: var(--color-success);
-    border-color: var(--color-success);
-    color: white;
-}
-
-.sql-display__btn .btn-icon {
-    font-size: 0.9rem;
+    opacity: 0.5;
 }
 
 /* Responsive */
@@ -102,6 +122,12 @@
     .sql-display__code {
         padding: var(--spacing-md);
         font-size: 0.8rem;
+    }
+
+    .sql-display__editor {
+        padding: var(--spacing-md);
+        font-size: 0.8rem;
+        min-height: 150px;
     }
 
     .sql-display__placeholder {

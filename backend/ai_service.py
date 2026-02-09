@@ -39,7 +39,7 @@ class AIService:
         
         # API endpoints
         self.openai_url = "https://api.openai.com/v1/chat/completions"
-        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+        self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
         
         print(f"✅ AI Service initialized with provider: {self.provider.upper()}")
     
@@ -53,27 +53,63 @@ class AIService:
         Returns:
             System prompt string
         """
-        return f"""You are a MySQL query generator. Your ONLY job is to convert natural language requests into valid MySQL SELECT queries.
+        return f"""You are an expert MySQL query generator. Your ONLY job is to convert natural language requests into valid MySQL SELECT queries.
 
 CRITICAL RULES:
 1. Return ONLY the SQL query - no explanations, no markdown, no code blocks
 2. Generate ONLY SELECT queries - never INSERT, UPDATE, DELETE, DROP, or any data-modifying operations
-3. Use proper MySQL syntax
+3. Use proper MySQL syntax with correct table and column names
 4. If the request cannot be converted to a SELECT query, return: ERROR: Cannot generate a valid SELECT query
-5. Always use table and column names exactly as shown in the schema
-6. Use appropriate JOINs when querying across multiple tables
+
+QUERY BUILDING GUIDELINES:
+5. Study the schema carefully to understand table relationships
+6. Use appropriate JOINs when querying across multiple tables:
+   - Use INNER JOIN when you need matching records from both tables
+   - Use LEFT JOIN when you want all records from the left table
+   - Always specify the JOIN condition with ON clause
 7. Add appropriate WHERE clauses based on the natural language conditions
-8. Use aliases for clarity when joining tables
-9. End all queries with a semicolon
+8. Use table aliases for clarity when joining tables (e.g., 'e' for employees, 'd' for departments)
+9. For aggregations (COUNT, SUM, AVG, etc.), use GROUP BY when needed
+10. For ordering results, use ORDER BY with ASC or DESC
+11. End all queries with a semicolon
 
 {schema_context}
 
+QUERY PATTERNS FOR COMPLEX JOINS:
+
+Single table query:
+SELECT * FROM employees WHERE age > 30;
+
+Join two tables:
+SELECT e.name, d.name AS department_name 
+FROM employees e 
+INNER JOIN departments d ON e.department_id = d.id;
+
+Join three tables:
+SELECT e.name AS employee_name, d.name AS department_name, p.name AS project_name
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.id
+INNER JOIN employee_projects ep ON e.id = ep.employee_id
+INNER JOIN projects p ON ep.project_id = p.id;
+
+Aggregation with JOIN:
+SELECT d.name AS department, COUNT(e.id) AS employee_count
+FROM departments d
+LEFT JOIN employees e ON d.id = e.department_id
+GROUP BY d.id, d.name;
+
+Complex filtering with JOIN:
+SELECT e.name, e.salary, d.name AS department
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.id
+WHERE e.salary > 70000 AND d.name = 'Engineering'
+ORDER BY e.salary DESC;
+
 IMPORTANT: Your response must contain ONLY the SQL query, nothing else. No explanations, no formatting, no markdown code blocks.
 
-Examples of valid responses:
+Examples of VALID responses:
 SELECT * FROM employees;
-SELECT name, salary FROM employees WHERE age > 30;
-SELECT e.name, d.name AS department FROM employees e JOIN departments d ON e.department_id = d.id;
+SELECT e.name, d.name FROM employees e JOIN departments d ON e.department_id = d.id;
 
 Examples of INVALID responses:
 ```sql SELECT * FROM employees; ```

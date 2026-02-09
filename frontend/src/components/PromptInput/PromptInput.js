@@ -94,7 +94,7 @@ function PromptInput({ value, onChange, onSubmit, onClear, isLoading, disabled }
                     ) : (
                         <>
                             <span className="btn-icon">▶</span>
-                            <span className="btn-text">Generate SQL</span>
+                            <span className="btn-text">Generate Data & Script</span>
                         </>
                     )}
                 </button>

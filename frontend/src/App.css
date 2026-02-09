@@ -2,7 +2,7 @@
  * ============================================
  * App Component Styles
  * ============================================
- * Main layout and panel styling
+ * Main layout and panel styling - Clean White Theme
  */
 
 /* App Container */
@@ -12,9 +12,10 @@
     flex-direction: column;
     position: relative;
     overflow-x: hidden;
+    background-color: var(--color-bg-secondary);
 }
 
-/* Background Effects */
+/* Background Effects - Subtle for white theme */
 .app__background {
     position: fixed;
     top: 0;
@@ -24,45 +25,12 @@
     pointer-events: none;
     z-index: -1;
     overflow: hidden;
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
 }
 
 .app__glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.4;
-    animation: glow-pulse 8s ease-in-out infinite;
-}
-
-.app__glow--1 {
-    width: 600px;
-    height: 600px;
-    background: var(--color-primary);
-    top: -200px;
-    left: -200px;
-}
-
-.app__glow--2 {
-    width: 500px;
-    height: 500px;
-    background: var(--color-secondary);
-    bottom: -150px;
-    right: -150px;
-    animation-delay: 4s;
-}
-
-@keyframes glow-pulse {
-
-    0%,
-    100% {
-        opacity: 0.3;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.5;
-        transform: scale(1.1);
-    }
+    display: none;
+    /* Hide glows for clean white look */
 }
 
 /* Main Content */
@@ -83,13 +51,13 @@
 
 /* Panels */
 .app__panel {
-    background: var(--gradient-card);
+    background: var(--color-bg-card);
     border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    backdrop-filter: blur(20px);
+    border: 1px solid var(--color-border-dark);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--shadow-md);
 }
 
 .app__panel--left {
@@ -109,6 +77,10 @@
     margin-bottom: var(--spacing-lg);
     flex-wrap: wrap;
     gap: var(--spacing-sm);
+}
+
+.panel__header--with-actions {
+    align-items: flex-start;
 }
 
 .panel__title {
@@ -133,13 +105,96 @@
 
 .panel__badge {
     background: var(--gradient-primary);
-    color: var(--color-text-primary);
+    color: white;
     padding: var(--spacing-xs) var(--spacing-md);
     border-radius: var(--radius-xl);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Panel Actions - Buttons in Header */
+.panel__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.panel__btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-primary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.panel__btn:hover:not(:disabled) {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.panel__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.panel__btn--primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: white;
+    font-weight: 600;
+}
+
+.panel__btn--primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5568d3 0%, #63428c 100%);
+    border-color: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.panel__btn--secondary {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+.panel__btn--secondary:hover:not(:disabled) {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.panel__btn--edit {
+    background: #e7f5ff;
+    border-color: #339af0;
+    color: #1971c2;
+}
+
+.panel__btn--edit:hover {
+    background: #339af0;
+    border-color: #339af0;
+    color: white;
+}
+
+.panel__btn--copied {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: white;
+}
+
+.panel__btn .btn-icon {
+    font-size: 0.9rem;
 }
 
 /* Panel Sections (Right Panel) */
@@ -155,14 +210,18 @@
 }
 
 .panel__section--table {
-    flex: 1;
-    min-height: 0;
+    flex: 0 0 auto;
+    height: 400px;
+    min-height: 400px;
+    max-height: 400px;
     overflow: hidden;
 }
 
 .panel__section--sql {
     flex: 0 0 auto;
-    max-height: 250px;
+    height: 300px;
+    min-height: 300px;
+    max-height: 300px;
 }
 
 /* Responsive Design */
@@ -178,7 +237,19 @@
 
     .app__panel--right {
         order: 2;
-        min-height: 600px;
+        min-height: auto;
+    }
+
+    .panel__section--table {
+        height: 350px;
+        min-height: 350px;
+        max-height: 350px;
+    }
+
+    .panel__section--sql {
+        height: 280px;
+        min-height: 280px;
+        max-height: 280px;
     }
 }
 
@@ -198,6 +269,16 @@
 
     .panel__title {
         font-size: 1.1rem;
+    }
+
+    .panel__actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .panel__btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 

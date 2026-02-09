@@ -9,12 +9,13 @@ Author: AI Integration Project
 """
 
 import os
+import re
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 
 # Import custom modules
-from db import db_manager, test_db_connection, execute_sql, get_schema_context
+from db import db_manager, test_db_connection, execute_sql, execute_manual_sql, get_schema_context
 from ai_service import ai_service, convert_to_sql
 
 # Load environment variables
@@ -303,6 +304,79 @@ def execute_raw_query():
             "sql": sql_query,
             "data": results,
             "row_count": len(results)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@app.route('/api/execute-manual', methods=['POST'])
+def execute_manual_query():
+    """
+    Execute a manually edited SQL query.
+    Allows INSERT, UPDATE, DELETE operations for user-edited queries.
+    
+    Request Body:
+        {
+            "sql": "INSERT INTO employees (name, age, department, salary) VALUES ('John', 30, 'IT', 75000);"
+        }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or not data.get('sql'):
+            return jsonify({
+                "success": False,
+                "error": "No SQL query provided"
+            }), 400
+        
+        sql_query = data.get('sql', '').strip()
+        
+        if not sql_query:
+            return jsonify({
+                "success": False,
+                "error": "Empty SQL query"
+            }), 400
+        
+        # Basic security checks (prevent dangerous operations)
+        dangerous_keywords = ['DROP', 'TRUNCATE', 'GRANT', 'REVOKE', 'ALTER', 'CREATE']
+        sql_upper = sql_query.upper()
+        
+        for keyword in dangerous_keywords:
+            if re.search(r'\b' + keyword + r'\b', sql_upper):
+                return jsonify({
+                    "success": False,
+                    "error": f"Dangerous operation detected: {keyword}. Only SELECT, INSERT, UPDATE, DELETE are allowed.",
+                    "sql": sql_query
+                }), 400
+        
+        # Check for multiple statements
+        if sql_query.count(';') > 1:
+            return jsonify({
+                "success": False,
+                "error": "Multiple SQL statements not allowed",
+                "sql": sql_query
+            }), 400
+        
+        # Execute the query using the manual execution function
+        success, results, message = execute_manual_sql(sql_query)
+        
+        if not success:
+            return jsonify({
+                "success": False,
+                "error": message,
+                "sql": sql_query
+            }), 400
+        
+        return jsonify({
+            "success": True,
+            "sql": sql_query,
+            "data": results,
+            "affected_rows": len(results) if results else 0,
+            "message": message
         })
         
     except Exception as e:

@@ -252,6 +252,85 @@ def get_schema_context() -> str:
     return db_manager.get_schema_description()
 
 
+def execute_manual_sql(query: str) -> Tuple[bool, Any, str]:
+    """
+    Execute a manually edited SQL query.
+    Supports SELECT, INSERT, UPDATE, DELETE operations.
+    
+    Args:
+        query: SQL query to execute (SELECT, INSERT, UPDATE, DELETE)
+        
+    Returns:
+        Tuple of (success: bool, data: list/None, message: str)
+    """
+    connection = None
+    cursor = None
+    
+    try:
+        connection = db_manager.get_connection()
+        if not connection or not connection.is_connected():
+            return False, None, "Failed to connect to database"
+        
+        cursor = connection.cursor(dictionary=True)
+        
+        # Execute the query
+        cursor.execute(query)
+        
+        # Check if it's a SELECT query (has results)
+        query_type = query.strip().upper().split()[0]
+        
+        if query_type == 'SELECT':
+            # Fetch results for SELECT queries
+            results = cursor.fetchall()
+            
+            # Convert to JSON-serializable format
+            serializable_results = []
+            for row in results:
+                serializable_row = {}
+                for key, value in row.items():
+                    if hasattr(value, '__float__'):
+                        serializable_row[key] = float(value)
+                    elif hasattr(value, 'isoformat'):
+                        serializable_row[key] = value.isoformat()
+                    else:
+                        serializable_row[key] = value
+                serializable_results.append(serializable_row)
+            
+            row_count = len(serializable_results)
+            return True, serializable_results, f"Query executed successfully. {row_count} rows returned."
+        
+        else:
+            # For INSERT, UPDATE, DELETE - commit and return affected rows
+            connection.commit()
+            affected_rows = cursor.rowcount
+            
+            if query_type == 'INSERT':
+                message = f"Successfully inserted {affected_rows} row(s)."
+            elif query_type == 'UPDATE':
+                message = f"Successfully updated {affected_rows} row(s)."
+            elif query_type == 'DELETE':
+                message = f"Successfully deleted {affected_rows} row(s)."
+            else:
+                message = f"Query executed successfully. {affected_rows} row(s) affected."
+            
+            # For non-SELECT queries, return empty list but with success message
+            return True, [], message
+            
+    except Error as e:
+        if connection:
+            connection.rollback()
+        error_message = f"Database error: {str(e)}"
+        print(f"❌ {error_message}")
+        return False, None, error_message
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+
+
+
 # ============================================
 # Test the module when run directly
 # ============================================

@@ -2,6 +2,7 @@
  * ============================================
  * Prompt Input Component Styles
  * ============================================
+ * Clean White Theme
  */
 
 .prompt-input {
@@ -19,8 +20,8 @@
     min-height: 140px;
     padding: var(--spacing-lg);
     padding-bottom: var(--spacing-2xl);
-    background: var(--color-bg-secondary);
-    border: 2px solid var(--color-border);
+    background: var(--color-bg-primary);
+    border: 2px solid var(--color-border-dark);
     border-radius: var(--radius-md);
     color: var(--color-text-primary);
     font-family: var(--font-primary);
@@ -32,22 +33,23 @@
 
 .prompt-input__textarea::placeholder {
     color: var(--color-text-muted);
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .prompt-input__textarea:hover:not(:disabled) {
-    border-color: var(--color-border-hover);
+    border-color: var(--color-text-secondary);
 }
 
 .prompt-input__textarea:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px var(--color-primary-glow);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
     outline: none;
 }
 
 .prompt-input__textarea:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background: var(--color-bg-secondary);
 }
 
 /* Character Count */
@@ -89,13 +91,13 @@
 /* Clear Button */
 .prompt-input__btn--clear {
     flex: 0 0 auto;
-    background: var(--color-bg-tertiary);
+    background: var(--color-bg-secondary);
     color: var(--color-text-secondary);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-dark);
 }
 
 .prompt-input__btn--clear:hover:not(:disabled) {
-    background: rgba(255, 118, 117, 0.1);
+    background: rgba(239, 68, 68, 0.1);
     border-color: var(--color-error);
     color: var(--color-error);
 }
@@ -103,13 +105,13 @@
 /* Submit Button */
 .prompt-input__btn--submit {
     background: var(--gradient-primary);
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-md), var(--shadow-glow);
+    color: white;
+    box-shadow: var(--shadow-md);
 }
 
 .prompt-input__btn--submit:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg), 0 0 30px var(--color-primary-glow);
+    box-shadow: var(--shadow-lg);
 }
 
 .prompt-input__btn--submit:active:not(:disabled) {
@@ -153,12 +155,13 @@
 }
 
 .prompt-input__hint kbd {
-    background: var(--color-bg-tertiary);
+    background: var(--color-bg-secondary);
     padding: 2px 6px;
     border-radius: 4px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-dark);
     font-family: var(--font-mono);
     font-size: 0.7rem;
+    color: var(--color-text-secondary);
 }
 
 /* Responsive */

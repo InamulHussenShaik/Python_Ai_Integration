@@ -215,24 +215,22 @@ function App() {
     /**
      * Handle manual SQL execution
      */
-    const handleExecuteManual = async () => {
-        if (!editedSql.trim()) return;
-
+    const handleExecuteManual = async (sql) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await executeManualQuery(editedSql);
+            const response = await executeManualQuery(sql);
 
             if (response.success) {
                 setResults(response.data);
                 setSqlQuery(response.sql);
                 setRowCount(response.affected_rows || response.data?.length || 0);
                 setError(null);
-                setIsEditing(false);
 
                 // Show success message for data modification queries
                 if (response.message) {
+                    // You could add a toast notification here
                     console.log('Success:', response.message);
                 }
             } else {
@@ -313,74 +311,16 @@ function App() {
 
                         {/* SQL Display Section */}
                         <div className="panel__section panel__section--sql">
-                            <div className="panel__header panel__header--with-actions">
+                            <div className="panel__header">
                                 <h2 className="panel__title">
                                     <span className="panel__icon">🔧</span>
                                     Generated Script
                                 </h2>
-
-                                {/* Action Buttons in Header */}
-                                {sqlQuery && (
-                                    <div className="panel__actions">
-                                        {isEditing ? (
-                                            <>
-                                                <button
-                                                    className="panel__btn panel__btn--primary"
-                                                    onClick={handleExecuteManual}
-                                                    disabled={!editedSql.trim() || isLoading}
-                                                    type="button"
-                                                >
-                                                    <span className="btn-icon">{isLoading ? '⏳' : '▶️'}</span>
-                                                    <span>{isLoading ? 'Executing...' : 'Execute'}</span>
-                                                </button>
-                                                <button
-                                                    className="panel__btn panel__btn--secondary"
-                                                    onClick={handleCancelEdit}
-                                                    disabled={isLoading}
-                                                    type="button"
-                                                >
-                                                    <span className="btn-icon">✕</span>
-                                                    <span>Cancel</span>
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button
-                                                    className="panel__btn panel__btn--edit"
-                                                    onClick={handleEdit}
-                                                    type="button"
-                                                >
-                                                    <span className="btn-icon">✏️</span>
-                                                    <span>Edit</span>
-                                                </button>
-                                                <button
-                                                    className={`panel__btn ${copied ? 'panel__btn--copied' : ''}`}
-                                                    onClick={handleCopy}
-                                                    type="button"
-                                                >
-                                                    {copied ? (
-                                                        <>
-                                                            <span className="btn-icon">✓</span>
-                                                            <span>Copied!</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span className="btn-icon">📋</span>
-                                                            <span>Copy</span>
-                                                        </>
-                                                    )}
-                                                </button>
-                                            </>
-                                        )}
-                                    </div>
-                                )}
                             </div>
 
                             <SqlDisplay
                                 sql={sqlQuery}
-                                isEditing={isEditing}
-                                editedSql={editedSql}
-                                onEditedSqlChange={setEditedSql}
+                                onExecuteManual={handleExecuteManual}
                             />
                         </div>
                     </section>

@@ -128,6 +128,20 @@ export async function executeRawQuery(sql) {
     });
 }
 
+/**
+ * Execute a manually edited SQL query
+ * Supports SELECT, INSERT, UPDATE, DELETE operations
+ * 
+ * @param {string} sql - SQL query to execute
+ * @returns {Promise<Object>} - Query results
+ */
+export async function executeManualQuery(sql) {
+    return fetchAPI('/api/execute-manual', {
+        method: 'POST',
+        body: JSON.stringify({ sql }),
+    });
+}
+
 // Export all functions
 export default {
     processPrompt,
@@ -135,4 +149,5 @@ export default {
     checkHealth,
     getSchema,
     executeRawQuery,
+    executeManualQuery,
 };
